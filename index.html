@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>L'Oréal | Smart Routine &amp; Product Advisor</title>
     <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;900&family=Playfair+Display:wght@400;600;900&display=swap"
       rel="stylesheet"
     />
     <link
@@ -16,13 +16,21 @@
   </head>
 
   <body>
-    <div class="page-wrapper">
-      <!------- Header / Branding ------->
-      <header class="site-header">
+    <!------- Hero Section ------->
+    <header class="hero">
+      <div class="animated-background">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+      </div>
+      <div class="hero-content">
         <img src="img/loreal-logo.png" alt="L'Oréal Logo" class="logo" />
-        <h1 class="site-title">Smart Routine &amp; Product Advisor</h1>
-      </header>
+        <h1 class="hero-title">Smart Routine &amp; Product Advisor</h1>
+        <p class="brand-tagline">Create the beauty that moves the world</p>
+      </div>
+    </header>
 
+    <div class="page-wrapper">
       <!-- Category Filter -->
       <div class="search-section">
         <select id="categoryFilter">
@@ -44,7 +52,12 @@
 
       <!-- Selected Products -->
       <div class="selected-products">
-        <h2>Selected Products</h2>
+        <div class="selected-products-header">
+          <h2>Selected Products</h2>
+          <button id="clearAllProducts" class="clear-all-btn">
+            <i class="fa-solid fa-trash"></i> Clear All
+          </button>
+        </div>
         <div id="selectedProductsList"></div>
         <button id="generateRoutine" class="generate-btn">
           <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Routine
@@ -72,9 +85,11 @@
           </button>
         </form>
       </section>
+    </div>
 
-      <!------- Footer Links ------->
-      <footer class="site-footer">
+    <!------- Footer Links ------->
+    <footer class="site-footer">
+      <div class="footer-inner">
         <p>&copy; 2025 L'Oréal. All rights reserved.</p>
         <nav>
           <!-- These URLs are placeholders -->
@@ -82,8 +97,8 @@
           <a href="#">Terms of Use</a>
           <a href="#">Contact</a>
         </nav>
-      </footer>
-    </div>
+      </div>
+    </footer>
 
     <!-- secrets.js can be removed when using Cloudflare Workers for API requests -->
     <script src="secrets.js"></script>
