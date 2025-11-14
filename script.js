@@ -387,7 +387,7 @@ categoryFilter.addEventListener("change", async (e) => {
 /* Send message to OpenAI API using Cloudflare Worker */
 async function sendMessageToOpenAI(userMessage, includeFullHistory = true) {
   try {
-    /* Create the request payload for OpenAI API */
+    // Build the messages array we want to send
     const messages = includeFullHistory
       ? [...conversationHistory, { role: "user", content: userMessage }]
       : [
@@ -399,31 +399,22 @@ async function sendMessageToOpenAI(userMessage, includeFullHistory = true) {
           { role: "user", content: userMessage },
         ];
 
-    const requestBody = {
-      model: "gpt-4o",
-      messages: messages,
-      max_tokens: 500,
-      temperature: 0.7,
-    };
+    // This is the ONLY thing the Worker needs
+    const requestBody = { messages };
 
     console.log("Sending request to Cloudflare Worker:", requestBody);
 
-    /* Send request to Cloudflare Worker which handles OpenAI API key */
     const response = await fetch("https://openapi-key.nable.workers.dev/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json",
-        "User-Agent": "Mozilla/5.0 (compatible; L'Oreal-App/1.0)",
       },
       body: JSON.stringify(requestBody),
       mode: "cors",
     });
 
     console.log("Response status:", response.status);
-    console.log("Response headers:", [...response.headers.entries()]);
 
-    /* Check if the request was successful */
     if (!response.ok) {
       const errorText = await response.text();
       console.error("Error response:", errorText);
@@ -432,11 +423,9 @@ async function sendMessageToOpenAI(userMessage, includeFullHistory = true) {
       );
     }
 
-    /* Parse the response from OpenAI */
     const data = await response.json();
     console.log("Response data:", data);
 
-    /* Check if we got a valid response */
     if (
       data.choices &&
       data.choices[0] &&
@@ -445,7 +434,6 @@ async function sendMessageToOpenAI(userMessage, includeFullHistory = true) {
     ) {
       const aiResponse = data.choices[0].message.content;
 
-      /* Save to conversation history if using full history */
       if (includeFullHistory) {
         conversationHistory.push({ role: "user", content: userMessage });
         conversationHistory.push({ role: "assistant", content: aiResponse });
@@ -459,7 +447,6 @@ async function sendMessageToOpenAI(userMessage, includeFullHistory = true) {
   } catch (error) {
     console.error("Error calling OpenAI API:", error);
 
-    /* Check for specific error types */
     if (
       error.name === "TypeError" &&
       error.message.includes("Failed to fetch")
@@ -478,6 +465,7 @@ async function sendMessageToOpenAI(userMessage, includeFullHistory = true) {
     throw error;
   }
 }
+
 
 /* Generate routine using selected products */
 async function generateRoutine() {
